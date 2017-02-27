@@ -20,14 +20,12 @@ import Core
 
 class DownloadMagazineJob: Operation {
 	
+	// headers
 	static let kContentLength = "Content-Length";
 	static let kRange					= "Range";
-	
+	// data chunk size
 	static let PART_SIZE: Int64 = 1024 * 1024;
 
-	
-	private let maxRetryCount = 3;
-	
 	private var fileStorage: FileStorage;
 	private var book: Book;
 	
@@ -47,61 +45,43 @@ class DownloadMagazineJob: Operation {
 	}
 	
 	func fileSize() -> Int64? {
-		if let url = book.url {
-			if var request = try? URLRequest(url: url, method: .head, headers: nil) {
-				let lock = DispatchSemaphore(value: 0);
-				var contentLength: Int64?;
-				request.cachePolicy = .reloadIgnoringCacheData;
-				URLSession.shared.dataTask(with: request) { (data, response, error) in
-					if let response = response as? HTTPURLResponse {
-						if response.statusCode / 100 <= 2 {
-							let key = response.allHeaderFields[DownloadMagazineJob.kContentLength];
-							if let value = key as? String {
-								contentLength = Int64(value);
-							}
+		if isCancelled { return nil; }
+		let requestBuilder = DownloadURLRequest.head(book: book);
+		if let request = requestBuilder.urlRequest {
+			let lock = DispatchSemaphore(value: 0);
+			var contentLength: Int64?;
+			URLSession.shared.dataTask(with: request) { (data, response, error) in
+				if let response = response as? HTTPURLResponse {
+					if response.statusCode / 100 <= 2 {
+						let key = response.allHeaderFields[DownloadMagazineJob.kContentLength];
+						if let value = key as? String {
+							contentLength = Int64(value);
 						}
 					}
-					lock.signal();
-				}.resume();
-				_ = lock.wait(timeout: .distantFuture);
-				return contentLength;
-			}
+				}
+				lock.signal();
+			}.resume();
+			_ = lock.wait(timeout: .distantFuture);
+			return contentLength;
 		}
 		return nil;
 	}
 	
 	func filePart(_ part: RangePart, _ start: Int64, _ total: Int64) -> Bool {
-		if let url = book.url, let name = book.name {
+		if isCancelled { return false; }
+		if let name = book.name {
+			let requestBuilder = DownloadURLRequest.fetch(book: book, range: part);
 			var headers: [String: String] = [:];
 			headers[DownloadMagazineJob.kRange] = part.description;
-			if var request = try? URLRequest(url: url, method: .get, headers: headers) {
+			if let request = requestBuilder.urlRequest {
 				let lock = DispatchSemaphore(value: 0);
-				request.cachePolicy = .reloadIgnoringCacheData;
 				URLSession.shared.dataTask(with: request) { [weak weakSelf = self] (data, response, error) in
 					do {
 						if let uri = weakSelf?.fileUri("\(name).hpub") {
 							if let data = data {
 								let stream = DataStream(data);
-								if FileManager.default.fileExists(atPath: uri.path) {
-									if let handle = try? FileHandle(forWritingTo: uri) {
-										handle.seekToEndOfFile();
-										while let buffer = stream.read(bufferSize: 8192) {
-											handle.write(buffer);
-										}
-										handle.closeFile();
-									}
-								} else {
-									var first = true;
-									while let buffer = stream.read(bufferSize: 8192) {
-										if first {
-											try buffer.write(to: uri);
-											first = false;
-										} else if let handle = try? FileHandle(forWritingTo: uri) {
-											handle.seekToEndOfFile();
-											handle.write(buffer);
-											handle.closeFile();
-										}
-									}
+								if let cursor = weakSelf?.fileStorage.forSize("\(name).hpub") {
+									try stream.persist(uri, cursor, total);
 								}
 							}
 						}

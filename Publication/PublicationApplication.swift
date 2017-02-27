@@ -74,11 +74,11 @@ class PublicationApplication: UIResponder, UIApplicationDelegate {
 				}
 		}.addDisposableTo(bag);*/
 		
-		/*BusManager.register { evt in
+		BusManager.register { evt in
 			if let event = evt as? ProgressEvent {
-				print("\(event.url) is at: \(event.progress)");
+				print("\(event.url.lastPathComponent) has progress of: \(event.persisted) / \(event.total)");
 			}
-		}.addDisposableTo(bag);*/
+		}.addDisposableTo(bag);
 		
 		let service = BakerServiceImp();
 		service.books()

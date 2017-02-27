@@ -18,12 +18,19 @@ import Core
 
 class ProgressEvent: EventDelegate {
 	
-	private var _progress: Float;
+	private var _persisted: Int64;
+	private var _total: Int64;
 	private var _url: URL;
 	
-	var progress: Float {
+	var persisted: Int64 {
 		get {
-			return self._progress;
+			return self._persisted;
+		}
+	}
+	
+	var total: Int64 {
+		get {
+			return self._total;
 		}
 	}
 	
@@ -33,8 +40,9 @@ class ProgressEvent: EventDelegate {
 		}
 	}
 	
-	init(_ progress: Float, url: URL) {
-		self._progress = progress;
+	init(_ persited: Int64, _ total: Int64, url: URL) {
+		self._persisted = persited;
+		self._total = total;
 		self._url = url;
 	}
 }

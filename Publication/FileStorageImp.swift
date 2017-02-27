@@ -40,16 +40,6 @@ class FileStorageImp: FileStorage {
 		} else {
 			try data.write(to: url);
 		}
-		/*let dataStream = DataStream(data);
-		while let chunk = dataStream.read(bufferSize: buffer) {
-			do {
-				try write(chunk, url: url);
-			} catch let error {
-				print("write in chunk error is \(error)")
-			}
-			//let progress = Float(chunk.count + position) / Float(total);
-			//BusManager.post(event: ProgressEvent(progress, url: url));
-		}*/
 	}
 	
 	func forDirectory(_ named: String) -> URL? {
@@ -61,8 +51,9 @@ class FileStorageImp: FileStorage {
 	
 	func forSize(_ named: String) -> Int64 {
 		if let url = forDirectory(named) {
-			if FileManager.default.fileExists(atPath: url.path) {
-				if let attr = try? FileManager.default.attributesOfItem(atPath: url.path) {
+			let manager = FileManager.default;
+			if manager.fileExists(atPath: url.path) {
+				if let attr = try? manager.attributesOfItem(atPath: url.path) {
 					if let size = attr[FileAttributeKey.size] as? Int64 {
 						return size;
 					}
@@ -73,7 +64,8 @@ class FileStorageImp: FileStorage {
 	}
 	
 	fileprivate func write(_ data: Data, url: URL) throws {
-		if FileManager.default.fileExists(atPath: url.path) {
+		let manager = FileManager.default;
+		if manager.fileExists(atPath: url.path) {
 			if let handle = try? FileHandle(forWritingTo: url) {
 				handle.seekToEndOfFile();
 				handle.write(data);

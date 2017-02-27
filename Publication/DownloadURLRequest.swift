@@ -17,26 +17,34 @@
 import Foundation
 import Alamofire
 
-enum DonwloadURLRequest: URLRequestConvertible {
+enum DownloadURLRequest: URLRequestConvertible {
 	case fetch(book: Book, range: RangePart);
+	case head(book: Book);
 
-	
 	func asURLRequest() throws -> URLRequest {
-		switch self {
-		case .fetch(let book, let range):
-			if let url = book.url {
-				var request = try URLRequest(url: url, method: .get);
-				request.setValue(range.description, forHTTPHeaderField: "Range");
-				return request;
-			}
-			throw HttpError(404, "no such url");
-		}
+		throw HttpError(0, "Not implemented error");
 	}
 	
 	var urlRequest: URLRequest? {
 		get {
 			do {
-				return try asURLRequest();
+				switch self {
+					case .fetch(let book, let range):
+						if let url = book.url {
+							var request = try URLRequest(url: url, method: .get);
+							request.setValue(range.description, forHTTPHeaderField: "Range");
+							request.cachePolicy = .reloadIgnoringCacheData;
+							return request;
+						}
+						throw HttpError(404, "no such url");
+					case .head(let book):
+						if let url = book.url {
+							var request = try URLRequest(url: url, method: .head);
+							request.cachePolicy = .reloadIgnoringCacheData;
+							return request;
+						}
+						throw HttpError(404, "no such url");
+				}
 			} catch {
 				return nil;
 			}
