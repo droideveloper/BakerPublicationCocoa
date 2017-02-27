@@ -16,13 +16,13 @@
  
 import Foundation
 
-protocol FileStorage {
+class HttpError: Error {
 	
-	var directory: URL? { get }
+	var statusCode: Int;
+	var message: String;
 	
-	func forData(_ data: Data, url: URL, position: Int64, total: Int64) throws;
-	
-	func forDirectory(_ named: String) -> URL?;
-	
-	func forSize(_ named: String) -> Int64;
+	init(_ statusCode: Int, _ message: String) {
+		self.statusCode = statusCode;
+		self.message = message;
+	}
 }

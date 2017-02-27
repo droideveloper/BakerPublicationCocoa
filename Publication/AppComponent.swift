@@ -15,14 +15,24 @@
  */
  
 import Foundation
+import Swinject
 
-protocol FileStorage {
+class AppComponent {
 	
-	var directory: URL? { get }
+	static var scope: Container = {
+		let scope = Container();
+		// provide OperationQueue
+		scope.register(OperationQueue.self) { _ in
+			let queue = OperationQueue();
+			queue.maxConcurrentOperationCount = 3;
+			return queue;
+		};
+		// provide BakerService
+		scope.register(BakerService.self) { _ in BakerServiceImp() };
+		// provide FileStorage
+		scope.register(FileStorage.self) { _ in FileStorageImp() };
+		// return parent scope
+		return scope;
+	}();
 	
-	func forData(_ data: Data, url: URL, position: Int64, total: Int64) throws;
-	
-	func forDirectory(_ named: String) -> URL?;
-	
-	func forSize(_ named: String) -> Int64;
 }

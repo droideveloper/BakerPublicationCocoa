@@ -21,7 +21,7 @@ class DataStream {
 	var data: Data;
 	var position: Int;
 	
-	init(data: Data) {
+	init(_ data: Data) {
 		self.data = data;
 		self.position = 0;
 	}

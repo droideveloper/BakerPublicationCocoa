@@ -15,14 +15,17 @@
  */
  
 import Foundation
+import ObjectMapper
 
-protocol FileStorage {
+class Config: Mappable {
 	
-	var directory: URL? { get }
+	static let kVersion = "version";
 	
-	func forData(_ data: Data, url: URL, position: Int64, total: Int64) throws;
+	var version: Int?;
 	
-	func forDirectory(_ named: String) -> URL?;
+	required init?(map: Map) { }
 	
-	func forSize(_ named: String) -> Int64;
+	func mapping(map: Map) {
+		version <- map[Config.kVersion];
+	}
 }

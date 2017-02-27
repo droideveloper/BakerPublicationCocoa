@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<VariablesViewState
+   version = "1.0">
+   <ContextStates>
+      <ContextState
+         contextName = "PublicationApplication.(applicationDidFinishLaunching(UIApplication) -&gt; ()).(closure #5):PublicationApplication.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "httpResponse.allHeaderFields[&quot;Content-Length&quot;];">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "DownloadMagazineJob.parts([RangePart], Int64, Int64) -&gt; ():DownloadMagazineJob.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "fileStorage.forSize(book.name!)">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "PublicationApplication.applicationDidFinishLaunching(UIApplication) -&gt; ():PublicationApplication.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "NSHomeDirectory()">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "DownloadMagazineJob.main() -&gt; ():DownloadMagazineJob.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "NSHomeDirectory()">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+   </ContextStates>
+</VariablesViewState>

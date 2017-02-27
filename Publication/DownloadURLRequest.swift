@@ -15,14 +15,31 @@
  */
  
 import Foundation
+import Alamofire
 
-protocol FileStorage {
+enum DonwloadURLRequest: URLRequestConvertible {
+	case fetch(book: Book, range: RangePart);
+
 	
-	var directory: URL? { get }
+	func asURLRequest() throws -> URLRequest {
+		switch self {
+		case .fetch(let book, let range):
+			if let url = book.url {
+				var request = try URLRequest(url: url, method: .get);
+				request.setValue(range.description, forHTTPHeaderField: "Range");
+				return request;
+			}
+			throw HttpError(404, "no such url");
+		}
+	}
 	
-	func forData(_ data: Data, url: URL, position: Int64, total: Int64) throws;
-	
-	func forDirectory(_ named: String) -> URL?;
-	
-	func forSize(_ named: String) -> Int64;
+	var urlRequest: URLRequest? {
+		get {
+			do {
+				return try asURLRequest();
+			} catch {
+				return nil;
+			}
+		}
+	}	
 }

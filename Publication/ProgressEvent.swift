@@ -14,15 +14,27 @@
  * limitations under the License.
  */
  
-import Foundation
+import Core
 
-protocol FileStorage {
+class ProgressEvent: EventDelegate {
 	
-	var directory: URL? { get }
+	private var _progress: Float;
+	private var _url: URL;
 	
-	func forData(_ data: Data, url: URL, position: Int64, total: Int64) throws;
+	var progress: Float {
+		get {
+			return self._progress;
+		}
+	}
 	
-	func forDirectory(_ named: String) -> URL?;
+	var url: URL {
+		get {
+			return self._url;
+		}
+	}
 	
-	func forSize(_ named: String) -> Int64;
+	init(_ progress: Float, url: URL) {
+		self._progress = progress;
+		self._url = url;
+	}
 }

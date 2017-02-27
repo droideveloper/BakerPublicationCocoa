@@ -16,6 +16,8 @@
  
 import UIKit
 import Core
+
+import Alamofire
 import Swinject
 import Material
 
@@ -32,6 +34,8 @@ class PublicationApplication: UIResponder, UIApplicationDelegate {
 	let colorPrimaryDark: UIColor = Color.rgb(0x333333)//Color.indigo.darken2;
 	let colorAccent: UIColor			= Color.pink.accent3;	
 	
+	let dispatchQueue = OperationQueue();
+	
 	// TODO change this in production
 	static let isDebug = true;
 	let bag = DisposeBag();
@@ -40,30 +44,72 @@ class PublicationApplication: UIResponder, UIApplicationDelegate {
  	
  	func applicationDidFinishLaunching(_ application: UIApplication) {
 		
-		PublicationApplication.shift(hex: 0xfff);
-		//forWrite(text: "{ \"version\": 1 }", named: cache);
+		dispatchQueue.maxConcurrentOperationCount = 3;
 		
-		if let versionStr = forRead(named: cache) {
-			print("cache: \(versionStr)");
-		}
+		let array = ["baker-framework-tutorial.hpub", "a-study-in-scarlet.hpub"];
+		array.forEach { file in
+			let fileManager = FileStorageImp();
+			if let uri = fileManager.forDirectory(file) {
+				if FileManager.default.fileExists(atPath: uri.path) {
+					try? FileManager.default.removeItem(atPath: uri.path);
+					print("\(uri.path) is deleted.");
+				}
+			}
+		};
+		
+		/*forRead(named: cache)
+			.observeOn(RxSchedulers.io)
+			.map { json in
+				Config(JSONString: json);
+			}
+			.subscribe { event in
+				switch event {
+				case .next(let config):
+					if let version = config?.version {
+						print("version is \(version)");
+					}
+				case .error(let error):
+					print("error: \(error)");
+				case .completed: break;
+				}
+		}.addDisposableTo(bag);*/
+		
+		/*BusManager.register { evt in
+			if let event = evt as? ProgressEvent {
+				print("\(event.url) is at: \(event.progress)");
+			}
+		}.addDisposableTo(bag);*/
 		
 		let service = BakerServiceImp();
 		service.books()
-			.observeOn(ConcurrentDispatchQueueScheduler(queue: DispatchQueue(label: "Schedulers.io", attributes: .concurrent)))
-			.subscribe({ (event: Event<[Book]>) in
-				switch event {
-					case .next(let array):
-						array.forEach({ (entry) in
-							print("\(entry.name) as \(entry.title)");
-						});
-					case .error(let error):
-						print("error: \(error)");
-					case .completed:
-						print("completed");
+			.flatMap({ (array: [Book]) -> Observable<Book> in Observable.from(array) })
+			.subscribe { [weak weakSelf = self] (evt: Event<Book>) in
+				switch evt {
+				case .next(let book):
+					weakSelf?.dispatchQueue.addOperation(DownloadMagazineJob(FileStorageImp(), book));
+				default: break;
 				}
-			}).addDisposableTo(bag);
-		
+			}
+			/*.flatMap({ (book: Book) -> Observable<HTTPURLResponse> in
+				if let url = book.url {
+					return RxNet.request(.head, url);
+				}
+				return Observable.empty();
+			})
+			.observeOn(RxSchedulers.io)
+			.subscribeOn(RxSchedulers.mainThread)
+			.subscribe(onNext: { (httpResponse) in
+				let fileSize = RangePart.toInt64(httpResponse.allHeaderFields["Content-Length"]);
+				if let fileSize = fileSize {
+					let parts = RangePart.toRangeParts(0, fileSize);
+					parts.forEach { item in
+						print("\(item)");
+					};
+				}
+			})*/
+			.addDisposableTo(bag);
 		// TODO register components such as scheduler etc.
+				
 		
 		window = UIWindow(frame: Screen.bounds);
 		
@@ -73,27 +119,29 @@ class PublicationApplication: UIResponder, UIApplicationDelegate {
 	}
 	
 	
-	func forWrite(text: String, named: String) -> Void {
+	func forWrite(text: String, named: String) -> Observable<Bool> {
 		if let directory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first {
 			let filePath = directory.appendingPathComponent(named);
 			do {
 				try text.write(to: filePath, atomically: false, encoding: .utf8);
-			} catch {
-				print("error occured while trying to write");
+				return Observable.just(true);
+			} catch let error {
+				return Observable.error(error);
 			}
 		}
+		return Observable.just(false);
 	}
 	
-	func forRead(named: String) -> String? {
+	func forRead(named: String) -> Observable<String> {
 		if let directory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first {
 			let filePath = directory.appendingPathComponent(named);
 			do {
-				return try String(contentsOf: filePath, encoding: .utf8);
-			} catch {
-				print("error occured while trying to read");
+				return Observable.just(try String(contentsOf: filePath, encoding: .utf8));
+			} catch let error {
+				return Observable.error(error);
 			}
 		}
-		return nil;
+		return Observable.empty();
 	}
 	
 }
@@ -107,13 +155,6 @@ extension PublicationApplication: LogDelegate {
 	
 	func getClassTag() -> String {
 		return String(describing: PublicationApplication.self);
-	}
-	
-	static func shift(hex: Int) -> Void {
-		let r = (hex >> 4) & 0xFF;
-		let g = (hex >> 0) & 0xFF;
-		let b = hex & 0xFF;
-		print("red: \(r) green: \(g) blue: \(b)");
 	}
 }
 

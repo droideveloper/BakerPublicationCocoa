@@ -16,13 +16,22 @@
  
 import Foundation
 
-protocol FileStorage {
+class RangePart: CustomStringConvertible {
 	
-	var directory: URL? { get }
+	static let PART_SIZE = 512 * 1024;
 	
-	func forData(_ data: Data, url: URL, position: Int64, total: Int64) throws;
+	var start: Int64?;
+	var end: Int64?;
 	
-	func forDirectory(_ named: String) -> URL?;
+	init(_ start: Int64, _ end: Int64) {
+		self.start = start;
+		self.end = end;
+	}
 	
-	func forSize(_ named: String) -> Int64;
+	var description: String {
+		if let start = start, let end = end {
+			return "bytes=\(start)-\(end)";
+		}
+		return "\(self)";
+	}	
 }
