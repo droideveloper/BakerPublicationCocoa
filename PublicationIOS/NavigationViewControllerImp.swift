@@ -17,6 +17,8 @@
 import UIKit
 import WebKit
 
+import RxSwift
+
 import Core
 import Material
 
@@ -29,9 +31,29 @@ class NavigationViewControllerImp: AbstractViewController<NavigationViewControll
 	private var progressView: UIActivityIndicatorView!;
 	private var wkWebView: WKWebView!;
 	
+	
+	let dispose = DisposeBag();
+	var displayState = false;
+	
+	convenience init(_ navigationUri: URL, _ contents: [String]) {
+		self.init();
+		self.presenter = NavigationViewControllerPresenterImp(self);
+		self.presenter?.setIndexURL(navigationUri);
+		self.presenter?.setContentStrings(contents);
+	}
+	
+	override func viewDidLoad() {
+		super.viewDidLoad();
+		BusManager.register(next: { [weak weakSelf = self] evt in
+			if let _ = evt as? VisibilityChange {
+				weakSelf?.toggleDisplayState();
+			}
+		}).addDisposableTo(dispose);
+	}
+	
 	override func prepare() {
 		super.prepare();
-		self.view = View(frame: .init(x: 0, y: 0, width: Screen.width, height: 1));
+		view = View(frame: .init(x: 0, y: 0, width: Screen.width, height: 1));
 		
 		let configuration = WKWebViewConfiguration();
 		let controller = WKUserContentController();
@@ -41,21 +63,21 @@ class NavigationViewControllerImp: AbstractViewController<NavigationViewControll
 		}
 		configuration.userContentController = controller;
 		
-		self.wkWebView = WKWebView(frame: .zero, configuration: configuration);
-		self.wkWebView.uiDelegate = presenter?.uiDelegate;
-		self.wkWebView.navigationDelegate = presenter?.navigationDelegate;
+		wkWebView = WKWebView(frame: .zero, configuration: configuration);
+		wkWebView.uiDelegate = presenter?.uiDelegate;
+		wkWebView.navigationDelegate = presenter?.navigationDelegate;
 		
-		self.view.layout(wkWebView)
+		view.layout(wkWebView)
 			.edges();
 	}
 	
 	func load(url: URL) {
 		if #available(iOS 9.0, *) {
 			// TODO this is 9.0 fixed bug
-			self.wkWebView.loadFileURL(url, allowingReadAccessTo: url);
+			wkWebView.loadFileURL(url, allowingReadAccessTo: url);
 		} else {
 			// TODO extract book into /temp/www in order to access local html file.
-			self.wkWebView.load(URLRequest(url: url));
+			wkWebView.load(URLRequest(url: url));
 		}
 	}
 	
@@ -71,7 +93,7 @@ class NavigationViewControllerImp: AbstractViewController<NavigationViewControll
 	}
 	
 	func evaluateJavascript(js: String) {
-		self.wkWebView.evaluateJavaScript(js, completionHandler: nil);
+		wkWebView.evaluateJavaScript(js, completionHandler: nil);
 	}
 	
 	func scrollBy(x: CGFloat) {
@@ -80,12 +102,20 @@ class NavigationViewControllerImp: AbstractViewController<NavigationViewControll
 		});
 	}
 	
+	func toggleDisplayState() {
+		let translateY = view.bounds.origin.y + (displayState ? -1 : 1 * (view.bounds.height));
+		UIView.animate(withDuration: 0.3, animations: {
+			self.view.transform = CGAffineTransform.identity.translatedBy(x: 0, y: translateY);
+		});
+		displayState = !displayState;
+	}
+	
 	func showProgress() {
-		self.progressView?.startAnimating();
+		progressView?.startAnimating();
 	}
 	
 	func hideProgress() {
-		self.progressView?.stopAnimating();
+		progressView?.stopAnimating();
 	}
 	
 	func showError(_ error: String, action actionText: String?, completed on: (() -> Void)?) {

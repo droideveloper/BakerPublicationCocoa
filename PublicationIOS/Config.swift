@@ -20,18 +20,15 @@ import ObjectMapper
 class Config: Mappable {
 	
 	static let kTitle			= "title";
-	static let kIndex			= "index";
 	static let kContents	= "contents";
 	
 	var title: String?;
-	var index: String?;
 	var contents: [String]?;
 	
 	required init?(map: Map) { }
 	
 	func mapping(map: Map) {
 		title <- map[Config.kTitle];
-		index <- map[Config.kIndex];
 		contents <- map[Config.kContents];
 	}
 }

@@ -18,6 +18,17 @@ import UIKit
 
 extension UIView {
 	
+	var topConstraint: NSLayoutConstraint? {
+		get {
+			for constraint in constraints {
+				if checkAttrFirst(constraint, matches: .top) || checkAttrSecond(constraint, matches: .top) {
+					return constraint;
+				}
+			}
+			return nil;
+		}
+	}
+	
 	var heightConstraint: NSLayoutConstraint? {
 		get {
 			for constraint in constraints {

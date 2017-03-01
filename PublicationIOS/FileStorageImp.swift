@@ -16,8 +16,6 @@
 import Core
 import Foundation
 
-import ObjectMapper
-
 class FileStorageImp: FileStorage {
 	
 	private let buffer = 8192;
@@ -34,12 +32,17 @@ class FileStorageImp: FileStorage {
 		self.directories = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask);
 	}
 	
-	func forRead<T: Mappable>(_ named: String) -> T? {
+	func forRead(_ named: String) -> Config? {
 		if let directory = directory {
 			let url = directory.appendingPathComponent(named);
-			if let str = try? String(contentsOf: url, encoding: .utf8) {
-				return Mapper<T>().map(JSONString: str);
-			}
+			return forRead(url);
+		}
+		return nil;
+	}
+	
+	func forRead(_ uri: URL) -> Config? {
+		if let str = try? String(contentsOf: uri, encoding: .utf8) {
+			return Config(JSONString: str);
 		}
 		return nil;
 	}

@@ -111,14 +111,12 @@ class PublicationApplication: UIResponder, UIApplicationDelegate {
 				}
 			})*/
 			.addDisposableTo(bag);
-		// TODO register components such as scheduler etc.
-				
-		
+		// TODO register components such as scheduler etc
 		window = UIWindow(frame: Screen.bounds);
 		// resolve injection
 		// TODO change rootViewController with others
 		// wrap it with Snackbar so we can use it later.
-		window!.rootViewController = SnackbarController(rootViewController: PublicationToolbarController());
+		window!.rootViewController = SnackbarController(rootViewController: ViewPagerController());
 		window!.makeKeyAndVisible();
 	}
 	

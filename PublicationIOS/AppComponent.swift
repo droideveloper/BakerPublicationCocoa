@@ -34,17 +34,27 @@ class AppComponent {
 		scope.register(BakerService.self) { _ in BakerServiceImp() };
 		// provide FileStorage
 		scope.register(FileStorage.self) { _ in FileStorageImp() };
-		
 		// register menuNavigationViewController
 		scope.register(NavigationViewController.self) { _ in NavigationViewControllerImp() }
-			.initCompleted { (injector, menuController) in
-				let controller = menuController as! NavigationViewControllerImp;
+			.initCompleted { (injector, viewController) in
+				let controller = viewController as! NavigationViewControllerImp;
 				controller.presenter = injector.resolve(NavigationViewControllerPresenter.self);
 		};
 		// register menuNavigationViewControllerPresenter
 		scope.register(NavigationViewControllerPresenter.self) { injector in
 			NavigationViewControllerPresenterImp(injector.resolve(NavigationViewController.self)!);
 		};
+//		
+//		scope.register(ReadViewController.self) { _ in ReadViewControllerImp() }
+//			.initCompleted { (injector, viewController) in
+//				let controller = viewController as! ReadViewControllerImp;
+//				controller.presenter = injector.resolve(ReadViewControllerPresenter.self);
+//		};
+//		
+//		scope.register(ReadViewControllerPresenter.self) { injector in
+//			ReadViewControllerPresenterImp(injector.resolve(ReadViewController.self)!, injector.resolve(FileStorage.self)!);
+//		};
+		
 		// return parent scope		
 		return scope;
 	}();

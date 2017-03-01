@@ -17,43 +17,55 @@
 import UIKit
 import WebKit
 
+import RxSwift
+
 import Core
 import Material
 
 class ContentViewControllerImp: AbstractPageViewHolder<URL, ContentViewControllerPresenter>,
-	ContentViewController, LogDelegate {
+	ContentViewController, LogDelegate, UIGestureRecognizerDelegate {
 	
 	private var wkWebView: WKWebView!;
 	private var progressView: UIActivityIndicatorView!;
 	
-	convenience init(_ index: Int, _ item: URL) {
+	let dispose = DisposeBag();
+	
+	convenience init(_ position: Int, _ item: URL?) {
 		self.init();
-		self.position = index;
+		self.presenter = ContentViewControllerPresenterImp(self);
+		self.position = position;
 		self.item = item;
 	}
 	
 	override func prepare() {
 		super.prepare();
 		
-		self.presenter?.setUrl(self.item);
+		presenter?.setUrl(item);
 		
-		self.progressView = UIActivityIndicatorView(activityIndicatorStyle: .whiteLarge);
+		progressView = UIActivityIndicatorView(activityIndicatorStyle: .whiteLarge);
 		if let theme = application() {
-			self.progressView.color = theme.colorAccent;
+			progressView.color = theme.colorAccent;
 		}
 		
-		self.view = View(frame: Screen.bounds);
+		view = View(frame: Screen.bounds);
 		
 		let configuration = WKWebViewConfiguration();
-		self.wkWebView = WKWebView(frame: .zero, configuration: configuration);
-		self.wkWebView.uiDelegate = presenter?.uiDelegate;
-		self.wkWebView.navigationDelegate = presenter?.navigationDelegate;
+		wkWebView = WKWebView(frame: .zero, configuration: configuration);
+		wkWebView.uiDelegate = presenter?.uiDelegate;
+		wkWebView.navigationDelegate = presenter?.navigationDelegate;
 		
-		self.view.layout(wkWebView)
+		view.layout(wkWebView)
 			.edges();
 		
-		self.view.layout(progressView)
+		view.layout(progressView)
 			.center();
+		
+		// much much better approach
+		let gesture = UITapGestureRecognizer(target: self, action: #selector(doubleTap(gesture:)));
+		gesture.numberOfTapsRequired = 2;
+		gesture.delegate = self;
+		
+		wkWebView.scrollView.addGestureRecognizer(gesture);
 	}
 	
 	func load(url: URL) {
@@ -71,11 +83,11 @@ class ContentViewControllerImp: AbstractPageViewHolder<URL, ContentViewControlle
 	}
 	
 	func showProgress() {
-		self.progressView?.startAnimating();
+		progressView?.startAnimating();
 	}
 	
 	func hideProgress() {
-		self.progressView?.stopAnimating();
+		progressView?.stopAnimating();
 	}
 	
 	func showError(_ error: String, action actionText: String?, completed on: (() -> Void)?) {
@@ -96,6 +108,14 @@ class ContentViewControllerImp: AbstractPageViewHolder<URL, ContentViewControlle
 			snackbar.layer.removeAllAnimations();
 		}
 		_ = snackbarController?.animate(snackbar: .hidden);
+	}
+
+	func doubleTap(gesture: UITapGestureRecognizer) {
+		BusManager.post(event: VisibilityChange());
+	}
+	
+	func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+		return true;
 	}
 	
 	func isLogEnabled() -> Bool {

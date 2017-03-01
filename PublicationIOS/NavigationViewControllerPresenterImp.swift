@@ -57,32 +57,13 @@ class NavigationViewControllerPresenterImp: AbstractPresenter<NavigationViewCont
 	
 	var positions: [Int: CGFloat] = [:];
 	
-	override init(_ view: NavigationViewController) {
-		super.init(view);
-		if let directory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first {
-			self.index = directory.appendingPathComponent("a-study-in-scarlet")
-				.appendingPathComponent("index.html");
-		}
-		
-		self.contents = [
-			"Book Cover.html",
-			"Book Index.html",
-			"Part1-01.html",
-			"Part1-02.html",
-			"Part1-03.html",
-			"Part1-04.html",
-			"Part1-05.html",
-			"Part1-06.html",
-			"Part1-07.html",
-			"Part2-01.html",
-			"Part2-02.html",
-			"Part2-03.html",
-			"Part2-04.html",
-			"Part2-05.html",
-			"Part2-06.html",
-			"Part2-07.html",
-			"Tail.html"
-		];
+	
+	func setContentStrings(_ contents: [String]?) {
+		self.contents = contents;
+	}
+	
+	func setIndexURL(_ index: URL?) {
+		self.index = index;
 	}
 	
 	override func viewDidLoad() {

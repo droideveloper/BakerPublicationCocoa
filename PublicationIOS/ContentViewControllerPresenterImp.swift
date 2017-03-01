@@ -58,7 +58,8 @@ class ContentViewControllerPresenterImp: AbstractPresenter<ContentViewController
 		if let uri = urlRequest.url {
 			if let scheme = uri.scheme {
 				if scheme == WEB_AUTHORITY || scheme == SECURE_WEB_AUTHORITY {
-					
+					view.openUrl(uri: uri);
+					decisionHandler(.cancel);
 				} else if scheme == LOCALE_AUTHORITY {
 					if file == uri {
 						view.showProgress()

@@ -15,13 +15,13 @@
  */
  
 import Foundation
-import ObjectMapper
 
 protocol FileStorage {
 	
 	var directory: URL? { get }
 	
-	func forRead<T: Mappable>(_ named: String) -> T?;
+	func forRead(_ named: String) -> Config?;
+	func forRead(_ uri: URL) -> Config?;
 	
 	func forDirectory(_ named: String) -> URL?;
 	

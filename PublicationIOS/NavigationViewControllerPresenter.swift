@@ -21,4 +21,6 @@ import Core
 	var uiDelegate: WKUIDelegate { get }
 	var jsBridge: WKScriptMessageHandler { get }
 	var navigationDelegate: WKNavigationDelegate { get }
+	func setContentStrings(_ contents: [String]?) -> Void;
+	func setIndexURL(_ index: URL?) -> Void;
 }

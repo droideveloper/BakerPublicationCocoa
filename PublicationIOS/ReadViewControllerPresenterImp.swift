@@ -38,44 +38,40 @@ class ReadViewControllerPresenterImp: AbstractPresenter<ReadViewController>,
 		}
 	}
 	
-	let json = "book.json";
+	let JSON		= "book.json";
+	let INDEX		= "index.html";
+	let INDEX2	= "index.htm";
+	
 	let dispose = DisposeBag();
-	var contentPagerAdapter: ContentPagerAdapter!;
+	var storage: FileStorage;
+	var contentPagerAdapter: ContentPagerAdapter;
 	var directory: URL?;
-	var book: Book?;
 	
 	init(_ view: ReadViewController, _ storage: FileStorage) {
-		super.init(view);
-		self.directory = storage.directory;
 		self.contentPagerAdapter = ContentPagerAdapter();
-		self.book = Book();
-		self.book?.name = "a-study-in-scarlet";
-		self.book?.title = "a Study in Scarlet";
+		self.storage = storage;
+		super.init(view);
 	}
 	
 	override func viewDidLoad() {
-		Observable.just(book)
-			.flatMap { [weak weakSelf = self] entity -> Observable<URL> in
-				if let entity = entity {
-					if let directory = weakSelf?.directory, let json = weakSelf?.json, let unzip = entity.name {
-						return Observable.just(directory.appendingPathComponent(unzip).appendingPathComponent(json));
+		let manager = FileManager.default;
+		directory = manager.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("a-study-in-scarlet");
+		
+		view.showProgress();
+		if let directory = directory {
+			Observable.just(directory.appendingPathComponent(JSON))
+				.map ({ uri -> Config? in self.storage.forRead(uri) })
+			  .subscribeOn(RxSchedulers.io)
+			  .observeOn(RxSchedulers.mainThread)
+				.subscribe(onNext: { config in
+					if let config = config {
+						self.updateContents(config);
 					}
-				}
-				return Observable.empty();
-			}.flatMap { uri -> Observable<Config> in
-				if let str = try? String(contentsOf: uri, encoding: .utf8) {
-					if let config = Config(JSONString: str) {
-						return Observable.just(config);
-					}
-				}
-				return Observable.empty();
-			}
-		 .subscribeOn(RxSchedulers.io)
-		 .observeOn(RxSchedulers.mainThread)
-		 .subscribe(onNext: { [weak weakSelf = self] (config: Config) in
-				weakSelf?.updateContents(config);
-			})
-		 .addDisposableTo(dispose);
+				}, onError: { error in
+					print("\(error.localizedDescription)");
+				})
+				.addDisposableTo(dispose);
+		}
 	}
 	
 	func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
@@ -96,10 +92,33 @@ class ReadViewControllerPresenterImp: AbstractPresenter<ReadViewController>,
 	}
 
 	func updateContents(_ config: Config) {
-		contentPagerAdapter.dataSource = config.contents?.map { entry -> URL in
-			return (directory?.appendingPathComponent(entry))!;
-		};
-		log(message: "content updated \(contentPagerAdapter.dataSource!)")
+		view.hideProgress();
+		// get items
+		if let contents = config.contents {
+			let urls = contents.map { str -> URL in
+				return directory!.appendingPathComponent(str);
+			};
+			contentPagerAdapter.dataSource = urls;
+			view.setCurrentPage(0);
+		}
+		// set title if needed
+		if let title = config.title {
+			view.setBookTitle(title);
+		}
+		// we check if we need navigation
+		if let indexUri = directory?.appendingPathComponent(INDEX),
+			 let index2Uri = directory?.appendingPathComponent(INDEX2) {
+			let manager = FileManager.default;
+			if manager.fileExists(atPath: indexUri.path) {
+				view.addNavigationController(indexUri, config.contents);
+			} else if manager.fileExists(atPath: index2Uri.path) {
+				view.addNavigationController(index2Uri, config.contents);
+			}
+		}
+	}
+	
+	func backPressed() {
+		
 	}
 	
 	func isLogEnabled() -> Bool {

@@ -21,4 +21,5 @@ import UIKit
 	var gesture: UIGestureRecognizerDelegate { get }
 	var dataSource: UIPageViewControllerDataSource { get }
 	var delegate: UIPageViewControllerDelegate { get }
+	@objc func backPressed();
 }

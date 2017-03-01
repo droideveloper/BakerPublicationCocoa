@@ -3,37 +3,10 @@
    version = "1.0">
    <ContextStates>
       <ContextState
-         contextName = "PublicationApplication.applicationDidFinishLaunching(UIApplication) -&gt; ():PublicationApplication.swift">
+         contextName = "ReadViewControllerImp.viewDidLoad() -&gt; ():ReadViewControllerImp.swift">
          <PersistentStrings>
             <PersistentString
-               value = "NSHomeDirectory()">
-            </PersistentString>
-            <PersistentString
-               value = "NSTemporaryDirectory()">
-            </PersistentString>
-         </PersistentStrings>
-      </ContextState>
-      <ContextState
-         contextName = "PublicationToolbarController.prepare() -&gt; ():PublicationToolbarController.swift">
-         <PersistentStrings>
-            <PersistentString
-               value = "ColorViewController.rgbControllers()">
-            </PersistentString>
-         </PersistentStrings>
-      </ContextState>
-      <ContextState
-         contextName = "DownloadMagazineJob.main() -&gt; ():DownloadMagazineJob.swift">
-         <PersistentStrings>
-            <PersistentString
-               value = "NSHomeDirectory()">
-            </PersistentString>
-         </PersistentStrings>
-      </ContextState>
-      <ContextState
-         contextName = "PublicationApplication.(applicationDidFinishLaunching(UIApplication) -&gt; ()).(closure #5):PublicationApplication.swift">
-         <PersistentStrings>
-            <PersistentString
-               value = "httpResponse.allHeaderFields[&quot;Content-Length&quot;];">
+               value = "application()?.dependencyInjector.resolve(ReadViewController.self);">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -52,13 +25,52 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "ReadViewControllerImp.setCurrentPage(Int) -&gt; ():ReadViewControllerImp.swift">
+      </ContextState>
+      <ContextState
+         contextName = "PublicationApplication.applicationDidFinishLaunching(UIApplication) -&gt; ():PublicationApplication.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "NSHomeDirectory()">
+            </PersistentString>
+            <PersistentString
+               value = "NSTemporaryDirectory()">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "NavigationViewControllerPresenterImp.viewDidLoad() -&gt; ():NavigationViewControllerPresenterImp.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "index ?? &quot;&quot;">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "FileStorageImp.forRead&lt;A where ...&gt; (URL) -&gt; A?:FileStorageImp.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "Mapper&lt;T&gt;().map(JSONString: str);">
+            </PersistentString>
+            <PersistentString
+               value = "Config(JSONString: str);">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "ReadViewControllerPresenterImp.(viewDidLoad() -&gt; ()).(closure #2):ReadViewControllerPresenterImp.swift">
+      </ContextState>
+      <ContextState
+         contextName = "ViewPagerController.viewDidLoad() -&gt; ():ViewPagerController.swift">
+      </ContextState>
+      <ContextState
          contextName = "NavigationViewControllerImp.load(url : URL) -&gt; ():NavigationViewControllerImp.swift">
       </ContextState>
       <ContextState
-         contextName = "ReadViewControllerImp.viewDidLoad() -&gt; ():ReadViewControllerImp.swift">
+         contextName = "ContentViewControllerImp.load(url : URL) -&gt; ():ContentViewControllerImp.swift">
          <PersistentStrings>
             <PersistentString
-               value = "application()?.dependencyInjector.resolve(ReadViewController.self);">
+               value = "NSHomeDirectory()">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -67,6 +79,33 @@
          <PersistentStrings>
             <PersistentString
                value = "fileStorage.forSize(book.name!)">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "DownloadMagazineJob.main() -&gt; ():DownloadMagazineJob.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "NSHomeDirectory()">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "PublicationToolbarController.prepare() -&gt; ():PublicationToolbarController.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "ColorViewController.rgbControllers()">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "ReadViewControllerImp.prepare() -&gt; ():ReadViewControllerImp.swift">
+      </ContextState>
+      <ContextState
+         contextName = "PublicationApplication.(applicationDidFinishLaunching(UIApplication) -&gt; ()).(closure #5):PublicationApplication.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "httpResponse.allHeaderFields[&quot;Content-Length&quot;];">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
