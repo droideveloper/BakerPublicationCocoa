@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<VariablesViewState
+   version = "1.0">
+   <ContextStates>
+      <ContextState
+         contextName = "PublicationApplication.applicationDidFinishLaunching(UIApplication) -&gt; ():PublicationApplication.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "NSHomeDirectory()">
+            </PersistentString>
+            <PersistentString
+               value = "NSTemporaryDirectory()">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "PublicationToolbarController.prepare() -&gt; ():PublicationToolbarController.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "ColorViewController.rgbControllers()">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "DownloadMagazineJob.main() -&gt; ():DownloadMagazineJob.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "NSHomeDirectory()">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "PublicationApplication.(applicationDidFinishLaunching(UIApplication) -&gt; ()).(closure #5):PublicationApplication.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "httpResponse.allHeaderFields[&quot;Content-Length&quot;];">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "NavigationViewControllerImp.prepare() -&gt; ():NavigationViewControllerImp.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "view.heightConstraint">
+            </PersistentString>
+            <PersistentString
+               value = "view == nil ">
+            </PersistentString>
+            <PersistentString
+               value = "view = UIView(frame: .zero);">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "NavigationViewControllerImp.load(url : URL) -&gt; ():NavigationViewControllerImp.swift">
+      </ContextState>
+      <ContextState
+         contextName = "ReadViewControllerImp.viewDidLoad() -&gt; ():ReadViewControllerImp.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "application()?.dependencyInjector.resolve(ReadViewController.self);">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "DownloadMagazineJob.parts([RangePart], Int64, Int64) -&gt; ():DownloadMagazineJob.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "fileStorage.forSize(book.name!)">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+   </ContextStates>
+</VariablesViewState>
