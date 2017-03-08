@@ -22,7 +22,7 @@ import Material
 import RxSwift
 import AlamofireImage
 
-class BookViewHolder: AbstractViewHolder<Book>, LogType {
+class BookViewHolder: AbstractTableViewHolder<Book>, LogType {
 	
 	static let kIdentifier = "kBookViewHolder";
 	
@@ -91,7 +91,7 @@ class BookViewHolder: AbstractViewHolder<Book>, LogType {
 		action.titleLabel?.font = RobotoFont.light(with: 10);
 		layout(action).left(175).right(5).top(86).height(32)
 		
-		BusManager.register(next: { [unowned self] evt in
+		BusManager.register({ [unowned self] evt in
 			if let event = evt as? ProgressEvent {
 				if let book = self.item {
 					var url: URL?;

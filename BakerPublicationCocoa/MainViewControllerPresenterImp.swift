@@ -23,7 +23,7 @@ class MainViewControllerPresenterImp: AbstractPresenter<MainViewController>,
 	MainViewControllerPresenter, LogType, UITableViewDelegate {
 	
 	let dispose = DisposeBag();
-	let bookAdapter = BookAdapter();
+	let bookAdapter = BookAdapter(dataSource: []);
 	
 	var dataSource: UITableViewDataSource {
 		get {
@@ -56,17 +56,18 @@ class MainViewControllerPresenterImp: AbstractPresenter<MainViewController>,
 			if let component = application.component as? Container {
 				if let bakerEndpoint = component.resolve(BakerEndpointType.self) {
 					bakerEndpoint.books()
-						.bindTo(bookAdapter.dataSourceObserver)
-						.addDisposableTo(dispose);
+						.retry(3)
+						.subscribeOn(RxSchedulers.io)
+						.observeOn(RxSchedulers.mainThread)
+						.subscribe(onNext: { [weak weakSelf = self] books in
+							weakSelf?.view?.hideProgress();
+							weakSelf?.bookAdapter.dataSource = books;
+							weakSelf?.view?.reload();
+						})
+						.disposed(by: dispose);
 				}
 			}
 		}
-		BusManager.register(next: { [unowned self] evt in
-			if let _ = evt as? BookAdapterChangeEvent {
-				self.view?.hideProgress();
-				self.view?.reload();
-			}
-		}).addDisposableTo(dispose);
 	}	
 	
 	func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -74,10 +75,9 @@ class MainViewControllerPresenterImp: AbstractPresenter<MainViewController>,
 	}
 	
 	func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-		view?.showError((bookAdapter.dataSource?.get(index: indexPath.row)?.cover)!, action: nil, completed: nil);
 		if let component = view?.application?.component as? Container {
 			if let fileStorage = component.resolve(FileStorageType.self) {
-				if let book = bookAdapter.dataSource?.get(index: indexPath.row) {
+				if let book = bookAdapter.dataSource.get(index: indexPath.row) {
 					// TODO check read and write donwload and unarzhive options
 					if let file = fileStorage.file(file: book.name!) {
 						if let directory = fileStorage.directory?.appendingPathComponent(book.name!) {

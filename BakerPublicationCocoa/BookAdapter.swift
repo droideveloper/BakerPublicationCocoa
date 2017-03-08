@@ -20,28 +20,9 @@ import MVPCocoa
 import Material
 import RxSwift
 
-class BookAdapter: AbstractAdapter<Book, BookViewHolder>, LogType {
+class BookAdapter: AbstractTableAdapter<Book>, LogType {	
 	
-	let dispose = DisposeBag();
-	var dataSourceObserver: BehaviorSubject<[Book]?>;
-	
-	init(_ observer: BehaviorSubject<[Book]?>) {
-		self.dataSourceObserver = observer;
-		super.init();
-		self.dataSourceObserver
-			.subscribeOn(RxSchedulers.io)
-			.observeOn(RxSchedulers.mainThread)
-			.subscribe(onNext: { [unowned self] dataSource in
-			self.dataSource = dataSource;
-			BusManager.post(event: BookAdapterChangeEvent());
-		}).addDisposableTo(dispose);
-	}
-	
-	convenience override init() {
-		self.init(BehaviorSubject<[Book]?>(value: nil));
-	}
-	
-	override func identifier(_ index: Int) -> String? {
+	override func identifierAt(_ index: Int) -> String {
 		return BookViewHolder.kIdentifier;
 	}
 	
@@ -53,5 +34,3 @@ class BookAdapter: AbstractAdapter<Book, BookViewHolder>, LogType {
 		return String(describing: BookAdapter.self);
 	}
 }
-
-class BookAdapterChangeEvent: EventType {}

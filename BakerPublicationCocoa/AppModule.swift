@@ -19,7 +19,7 @@ import PublicationCocoa
 
 class AppModule: AppComponent {
 	
-	static var shared: Container = {
+	public static let shared: Container = {
 		let module = AppModule();
 		return module.component;
 	}();
@@ -36,8 +36,7 @@ class AppModule: AppComponent {
 			return MainViewControllerImp();
 		}.initCompleted{ (r, viewController) in
 			if let viewController = viewController as? MainViewControllerImp {
-				let presenter = MainViewControllerPresenterImp(viewController);
-				viewController.presenter = presenter;
+				viewController.presenter = MainViewControllerPresenterImp(viewController);
 			}
 		}.inObjectScope(.graph);
 	}

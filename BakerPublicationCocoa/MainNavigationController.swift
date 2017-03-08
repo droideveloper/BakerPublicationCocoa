@@ -31,11 +31,7 @@ class MainNavigationController: NavigationController, LogType {
 	}
 	
 	func isLogEnabled() -> Bool {
-		#if DEBUG
-			return true;
-		#else
-			return false;
-		#endif
+		return BuildConfig.DEBUG;
 	}
 	
 	func getClassTag() -> String {
@@ -52,11 +48,7 @@ class MainStatusBarController: StatusBarController, LogType {
 	}
 	
 	func isLogEnabled() -> Bool {
-		#if DEBUG
-			return true;
-		#else
-			return false;
-		#endif
+		return BuildConfig.DEBUG;
 	}
 	
 	func getClassTag() -> String {

@@ -56,6 +56,7 @@
 		3DEE107D1E6A2BD2000F9CAE /* BookAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DEE107C1E6A2BD2000F9CAE /* BookAdapter.swift */; };
 		3DEE107F1E6A356D000F9CAE /* MainViewControllerPresenterImp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DEE107E1E6A356D000F9CAE /* MainViewControllerPresenterImp.swift */; };
 		3DF2441D1E6AD76C0046FD86 /* MainNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DF2441C1E6AD76C0046FD86 /* MainNavigationController.swift */; };
+		3DF7B8701E70887100875F16 /* DataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DF7B86F1E70887100875F16 /* DataService.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -123,6 +124,7 @@
 		3DEE107C1E6A2BD2000F9CAE /* BookAdapter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BookAdapter.swift; sourceTree = "<group>"; };
 		3DEE107E1E6A356D000F9CAE /* MainViewControllerPresenterImp.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainViewControllerPresenterImp.swift; sourceTree = "<group>"; };
 		3DF2441C1E6AD76C0046FD86 /* MainNavigationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainNavigationController.swift; sourceTree = "<group>"; };
+		3DF7B86F1E70887100875F16 /* DataService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataService.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -244,6 +246,7 @@
 				3DEE105C1E69FFFD000F9CAE /* BakerEndpointType.swift */,
 				3DEE105E1E6A0050000F9CAE /* BakerEndpointMethod.swift */,
 				3DEE10601E6A019D000F9CAE /* BakerEndpoint.swift */,
+				3DF7B86F1E70887100875F16 /* DataService.swift */,
 			);
 			name = Nets;
 			sourceTree = "<group>";
@@ -376,6 +379,7 @@
 				3DCE5B741E63673F00345976 /* Config.swift in Sources */,
 				3DEE105D1E69FFFD000F9CAE /* BakerEndpointType.swift in Sources */,
 				3D583ED51E603ECF00E38A36 /* PubllicationX.swift in Sources */,
+				3DF7B8701E70887100875F16 /* DataService.swift in Sources */,
 				3DEE106D1E6A0E3B000F9CAE /* BakerPublicationCocoa+HTTPURLResponse.swift in Sources */,
 				3DEE105F1E6A0050000F9CAE /* BakerEndpointMethod.swift in Sources */,
 				3DEE10641E6A036D000F9CAE /* AppModule.swift in Sources */,

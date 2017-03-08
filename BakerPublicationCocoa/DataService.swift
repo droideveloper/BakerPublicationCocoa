@@ -14,11 +14,25 @@
  * limitations under the License.
  */
  
-import Foundation
+import MVPCocoa
+import Alamofire
 
-import RxSwift
+enum DataService: EndpointType {
+	case version
 
-protocol BakerEndpointType {
-	
-	func books() -> Observable<[Book]>;	
+	var baseURL: String {
+		get {
+			return "http://example.org"
+		}
+	}
+
+	var request: (HTTPMethod, URLConvertible) {
+		get {
+			switch self {
+				case .version:
+					return (.get, "\(baseURL)/version");			
+			}		
+		}
+	}	
 }
+
