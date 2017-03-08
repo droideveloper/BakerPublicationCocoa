@@ -30,6 +30,5 @@ extension FileStorageType {
 			}
 		}
 		return 0;
-	}
-	
+	}	
 }

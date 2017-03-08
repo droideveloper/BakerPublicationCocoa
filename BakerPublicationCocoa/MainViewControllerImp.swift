@@ -43,6 +43,7 @@ class MainViewControllerImp: AbstractViewController<MainViewControllerPresenter>
 		// navigation view is there
 		navigationItem.title = "Baker Book Shelf"
 		navigationItem.titleLabel.font = RobotoFont.regular(with: 15);
+		navigationItem.titleLabel.textAlignment = .left;
 		navigationItem.titleLabel.textColor = .white;
 		
 		self.view.backgroundColor = Color.grey.lighten3;

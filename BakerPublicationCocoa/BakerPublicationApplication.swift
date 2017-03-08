@@ -30,12 +30,12 @@ class BakerPublicationApplication: UIResponder, UIApplicationDelegate,
 	var colorPrimaryDark: UIColor = Color.blueGrey.darken2;
 	var colorAccent: UIColor			= Color.pink.accent3;	
 	// injector
-	var dependencyInjector: Any = AppModule.shared;
+	var component: Any = AppModule.shared;
 	
  	func applicationDidFinishLaunching(_ application: UIApplication) {
 		window = UIWindow(frame: Screen.bounds);
-		if let dependencyInjector = dependencyInjector as? Container {
-			if let viewController = dependencyInjector.resolve(MainViewController.self) as? MainViewControllerImp {
+		if let component = component as? Container {
+			if let viewController = component.resolve(MainViewController.self) as? MainViewControllerImp {
 				window!.rootViewController = MainNavigationController.create(viewController: viewController);
 			}
 		}

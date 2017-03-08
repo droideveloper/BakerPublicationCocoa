@@ -69,7 +69,11 @@ class Book: NSObject, Mappable, LogType {
 	
 	
 	func isLogEnabled() -> Bool {
-		return true;
+		#if DEBUG
+			return true;
+		#else
+			return false;
+		#endif
 	}
 	
 	func getClassTag() -> String {

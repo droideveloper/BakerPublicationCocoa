@@ -53,8 +53,8 @@ class MainViewControllerPresenterImp: AbstractPresenter<MainViewController>,
 		super.viewDidLoad();
 		view?.showProgress();
 		if let application = view?.application {
-			if let dependencyInjector = application.dependencyInjector as? Container {
-				if let bakerEndpoint = dependencyInjector.resolve(BakerEndpointType.self) {
+			if let component = application.component as? Container {
+				if let bakerEndpoint = component.resolve(BakerEndpointType.self) {
 					bakerEndpoint.books()
 						.bindTo(bookAdapter.dataSourceObserver)
 						.addDisposableTo(dispose);
@@ -75,13 +75,14 @@ class MainViewControllerPresenterImp: AbstractPresenter<MainViewController>,
 	
 	func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 		view?.showError((bookAdapter.dataSource?.get(index: indexPath.row)?.cover)!, action: nil, completed: nil);
-		if let dependency = view?.application?.dependencyInjector as? Container {
-			if let fileStorage = dependency.resolve(FileStorageType.self) {
+		if let component = view?.application?.component as? Container {
+			if let fileStorage = component.resolve(FileStorageType.self) {
 				if let book = bookAdapter.dataSource?.get(index: indexPath.row) {
+					// TODO check read and write donwload and unarzhive options
 					if let file = fileStorage.file(file: book.name!) {
 						if let directory = fileStorage.directory?.appendingPathComponent(book.name!) {
 							if let navigationController = view?.navigationController {
-								let viewController = ReadViewController(book: directory, dependency: dependency);
+								let viewController = ReadViewController(book: directory);
 								navigationController.pushViewController(viewController, animated: true);
 							}
 						}
