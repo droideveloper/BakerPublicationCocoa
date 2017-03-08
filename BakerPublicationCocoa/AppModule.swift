@@ -19,22 +19,20 @@ import PublicationCocoa
 
 class AppModule: AppComponent {
 	
-	static var shared: Container {
-		get {
-			let module = AppModule();
-			return module.dependencyInjector;
-		}
-	}
+	static var shared: Container = {
+		let module = AppModule();
+		return module.component;
+	}();
 	
 	override init() {
 		super.init();
-		self.dependencyInjector.register(BakerEndpointType.self) { r in
+		self.component.register(BakerEndpointType.self) { r in
 			return BakerEndpoint();
 		}.inObjectScope(.container);
-		self.dependencyInjector.register(DispatchQueue.self) { r in
+		self.component.register(DispatchQueue.self) { r in
 			return DispatchQueue(label: "jobQueue", attributes: .concurrent);
 		}.inObjectScope(.container);
-		self.dependencyInjector.register(MainViewController.self) { r in
+		self.component.register(MainViewController.self) { r in
 			return MainViewControllerImp();
 		}.initCompleted{ (r, viewController) in
 			if let viewController = viewController as? MainViewControllerImp {

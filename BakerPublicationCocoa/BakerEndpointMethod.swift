@@ -25,7 +25,7 @@ enum BakerEndpointMethod {
 		}
 	}
 	
-	var request: (httpMethod: Alamofire.HTTPMethod, url: URLConvertible) {
+	var request: (httpMethod: HTTPMethod, url: URLConvertible) {
 		get {
 			switch self {
 				case .books:
